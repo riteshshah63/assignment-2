@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Fundraiser by ID</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <nav>
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="/fundraiser">Search Fundraiser</a></li>
+            <li><a href="/category">Search Category</a></li>
+        </ul>
+    </nav>
+
+    <h1>Search Fundraiser by ID</h1>
+
+    <div class="form-container">
+        <form id="searchFundraiserForm">
+            <label for="fundraiserId">Enter Fundraiser ID:</label>
+            <input type="number" id="fundraiserId" required>
+            <button type="submit">Search</button>
+        </form>
+        <div id="searchMessage" style="margin-top: 10px;"></div>
+    </div>
+
+    <div id="fundraiserResult">
+        <h2>Fundraiser Details</h2>
+        <p id="fundraiserDetails"></p>
+    </div>
+
+    <script>
+        // Search fundraiser by ID
+        document.getElementById('searchFundraiserForm').addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const fundraiserId = document.getElementById('fundraiserId').value;
+
+            const response = await fetch(`/fundraiser/${fundraiserId}`);
+            const messageElement = document.getElementById('searchMessage');
+            const fundraiserDetailsElement = document.getElementById('fundraiserDetails');
+
+            if (response.ok) {
+                const fundraiser = await response.json();
+                fundraiserDetailsElement.innerHTML = `
+                    <strong>Fundraiser ID:</strong> ${fundraiser.FUNDRAISER_ID}<br>
+                    <strong>Organizer:</strong> ${fundraiser.ORGANIZER}<br>
+                    <strong>Caption:</strong> ${fundraiser.CAPTION}<br>
+                    <strong>Target Funding:</strong> $${fundraiser.TARGET_FUNDING}<br>
+                    <strong>Current Funding:</strong> $${fundraiser.CURRENT_FUNDING}<br>
+                    <strong>City:</strong> ${fundraiser.CITY}<br>
+                    <strong>Category:</strong> ${fundraiser.CATEGORY}
+                `;
+                messageElement.textContent = ''; // Clear any previous messages
+            } else {
+                const errorData = await response.json();
+                fundraiserDetailsElement.innerHTML = '';
+                messageElement.textContent = errorData.error || 'Error fetching fundraiser';
+                messageElement.style.color = 'red';
+            }
+        });
+    </script>
+
+</body>
+</html>

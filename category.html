@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Category by ID</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <nav>
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="/fundraiser">Search Fundraiser</a></li>
+            <li><a href="/category">Search Category</a></li>
+        </ul>
+    </nav>
+
+    <h1>Search Category by ID</h1>
+
+    <div class="form-container">
+        <form id="searchCategoryForm">
+            <label for="categoryId">Enter Category ID:</label>
+            <input type="number" id="categoryId" required>
+            <button type="submit">Search</button>
+        </form>
+        <div id="searchMessage" style="margin-top: 10px;"></div>
+    </div>
+
+    <div id="categoryResult">
+        <h2>Category Details</h2>
+        <p id="categoryDetails"></p>
+    </div>
+
+    <script>
+        // Search category by ID
+        document.getElementById('searchCategoryForm').addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const categoryId = document.getElementById('categoryId').value;
+
+            const response = await fetch(`/category/${categoryId}`);
+            const messageElement = document.getElementById('searchMessage');
+            const categoryDetailsElement = document.getElementById('categoryDetails');
+
+            if (response.ok) {
+                const category = await response.json();
+                categoryDetailsElement.innerHTML = `
+                    <strong>Category ID:</strong> ${category.CATEGORY_ID}<br>
+                    <strong>Category Name:</strong> ${category.NAME}
+                `;
+                messageElement.textContent = ''; // Clear any previous messages
+            } else {
+                const errorData = await response.json();
+                categoryDetailsElement.innerHTML = '';
+                messageElement.textContent = errorData.error || 'Error fetching category';
+                messageElement.style.color = 'red';
+            }
+        });
+    </script>
+
+</body>
+</html>

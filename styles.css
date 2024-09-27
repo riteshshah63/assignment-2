@@ -1,0 +1,97 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+    padding: 20px;
+    background-color: #f4f4f4;
+    font-size: 18px; /* Increased the text size */
+}
+
+nav {
+    background-color: #333;
+    padding: 10px;
+}
+
+nav ul {
+    list-style: none;
+    padding: 0;
+}
+
+nav ul li {
+    display: inline;
+    margin-right: 20px;
+}
+
+nav ul li a {
+    color: white;
+    text-decoration: none;
+}
+
+nav ul li a:hover {
+    text-decoration: underline;
+}
+
+h1, h2 {
+    color: #333;
+    font-size: 24px; /* Increased heading size */
+}
+
+.form-container {
+    margin-bottom: 20px;
+    padding: 10px;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+#fundraiserResult, #categoryResult, #result {
+    margin-top: 20px;
+    padding: 10px;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+input[type="number"], input[type="text"], select {
+    padding: 10px;
+    margin: 5px 0;
+    width: 220px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+button {
+    padding: 10px 15px;
+    background-color: #5cb85c;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #4cae4c;
+}
+
+#searchMessage {
+    color: red;
+    margin-top: 10px;
+}
+
+#result {
+    display: none;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+}
+
+.content {
+    text-align: center; /* Centers the content */
+}
+
+.center-image {
+    width: 15%; /* Set image size to 15% of the page width */
+    display: block;
+    margin: 0 auto; /* Centers the image horizontally */
+}
