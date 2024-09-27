@@ -3,52 +3,65 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home Page</title>
+    <title>Home - Crowdfunding</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="container">
+    <header>
+        <h1>Welcome to Our Non-Profit Organization</h1>
+        <p>Your support can make a difference!</p>
         <nav>
             <ul>
-                <li><a href="/">Home</a></li>
-                <li><a href="/fundraiser">Search Fundraiser</a></li>
-                <li><a href="/category">Search Category</a></li>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="search.html">Search Fundraisers</a></li>
+                <li><a href="fundraiser.html">Fundraisers</a></li>
             </ul>
         </nav>
+    </header>
 
-        <div class="content">
-            <h1>Welcome to the Crowdfunding Platform</h1>
-            <p>Explore active fundraisers and categories.</p>
+    <section id="fundraiser-list">
+        <h2>Active Fundraisers</h2>
+        <div id="fundraiser-container"></div>
+    </section>
 
-            <!-- Add your image here -->
-            <img src="homepic.jpg" alt="Crowdfunding Image" class="center-image">
+    <script>
+        // Function to load active fundraisers on the home page
+        function loadActiveFundraisers() {
+            fetch("/fundraisers")
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error("Failed to fetch fundraisers");
+                    }
+                    return response.json();
+                })
+                .then(fundraisers => {
+                    const container = document.getElementById("fundraiser-container");
+                    container.innerHTML = ""; // Clear existing content
 
-            <!-- Additional Explanatory Content -->
-            <section id="about">
-                <h2>About Our Platform</h2>
-                <p>
-                    Our crowdfunding platform is designed to bring together creators, innovators, and supporters. Whether you're looking to launch 
-                    a new product, fund a community project, or support a charitable cause, we provide a space where you can connect with backers who 
-                    believe in your vision.
-                </p>
-            </section>
+                    fundraisers.forEach(fundraiser => {
+                        const item = document.createElement("div");
+                        item.className = "fundraiser-item";
+                        item.innerHTML = `
+                            <h4>${fundraiser.CAPTION}</h4>
+                            <p>Organized by: ${fundraiser.ORGANIZER}</p>
+                            <p>Target: ${fundraiser.TARGET_FUNDING} AUD</p>
+                            <p>Current: ${fundraiser.CURRENT_FUNDING} AUD</p>
+                            <p>City: ${fundraiser.CITY}</p>
+                            <p>Category: ${fundraiser.CATEGORY}</p>
+                            <a href="fundraiser.html?id=${fundraiser.FUNDRAISER_ID}">View Details</a>
+                        `;
+                        container.appendChild(item);
+                    });
+                })
+                .catch(error => {
+                    console.error("Error loading fundraisers:", error);
+                    const container = document.getElementById("fundraiser-container");
+                    container.innerHTML = "<p style='color: red;'>Error loading fundraisers.</p>";
+                });
+        }
 
-            <section id="how-it-works">
-                <h2>How It Works</h2>
-                <p>
-                    Getting started is easy! Simply sign up, create a fundraiser, and start sharing it with your network. Our platform helps you manage 
-                    contributions, track progress, and communicate with your supporters.
-                </p>
-            </section>
-
-            <section id="explore">
-                <h2>Explore Fundraisers</h2>
-                <p>
-                    Browse through our categories or search for specific fundraisers to find projects that interest you. From creative endeavors to 
-                    social causes, there's something for everyone.
-                </p>
-            </section>
-        </div>
-    </div>
+        // Fetch and display active fundraisers on page load
+        loadActiveFundraisers();
+    </script>
 </body>
 </html>

@@ -3,84 +3,104 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Search Fundraiser and Category</title>
+    <title>Search Fundraisers</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <nav>
-        <ul>
-            <li><a href="/">Home</a></li>
-            <li><a href="/fundraiser">Search Fundraiser</a></li>
-            <li><a href="/category">Search Category</a></li>
-            <li><a href="/search">Search Both</a></li>
-        </ul>
-    </nav>
+    <header>
+        <h1>Search Fundraisers</h1>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="search.html">Search Fundraisers</a></li>
+                <li><a href="fundraiser.html">Fundraisers</a></li>
+            </ul>
+        </nav>
+    </header>
 
-    <h1>Search Fundraiser and Category</h1>
+    <form id="search-form" onsubmit="event.preventDefault(); searchFundraisers();">
+        <label for="organizer">Organizer:</label>
+        <input type="text" id="organizer" name="organizer">
+        
+        <label for="city">City:</label>
+        <input type="text" id="city" name="city">
+        
+        <label for="category">Category:</label>
+        <select id="category">
+            <option value="">Select a category</option>
+            <option value="medical">Medical</option>
+            <option value="education">Education</option>
+            <option value="social impact">Social Impact</option>
+            <option value="crisis relief">Crisis Relief</option>
+        </select>
+        
+        <button type="submit">Search</button>
+        <button type="button" onclick="clearSearchForm()">Clear</button>
+    </form>
 
-    <div class="form-container">
-        <form id="searchForm">
-            <label for="searchType">Select Search Type:</label>
-            <select id="searchType" required>
-                <option value="" disabled selected>Select an option</option>
-                <option value="fundraiser">Fundraiser ID</option>
-                <option value="category">Category ID</option>
-            </select>
-            <br><br>
-            <label for="searchId">Enter ID:</label>
-            <input type="number" id="searchId" required>
-            <button type="submit">Search</button>
-        </form>
-        <div id="searchMessage" style="margin-top: 10px;"></div>
-    </div>
-
-    <div id="result">
-        <h2>Search Result</h2>
-        <p id="resultDetails"></p>
-    </div>
+    <section id="search-results">
+        <h2>Search Results</h2>
+        <div id="results-container"></div>
+    </section>
 
     <script>
-        document.getElementById('searchForm').addEventListener('submit', async (event) => {
-            event.preventDefault();
-            const searchType = document.getElementById('searchType').value;
-            const searchId = document.getElementById('searchId').value;
-            const resultDetailsElement = document.getElementById('resultDetails');
-            const messageElement = document.getElementById('searchMessage');
+        // Function to handle fundraiser search
+        function searchFundraisers() {
+            const organizer = document.getElementById('organizer').value.trim();
+            const city = document.getElementById('city').value.trim();
+            const category = document.getElementById('category').value;
 
-            let response;
-
-            if (searchType === 'fundraiser') {
-                response = await fetch(`/fundraiser/${searchId}`);
-            } else if (searchType === 'category') {
-                response = await fetch(`/category/${searchId}`);
+            if (!organizer && !city && !category) {
+                alert('Please select at least one search criterion.');
+                return;
             }
 
-            if (response.ok) {
-                const data = await response.json();
-                if (searchType === 'fundraiser') {
-                    resultDetailsElement.innerHTML = `
-                        <strong>Fundraiser ID:</strong> ${data.FUNDRAISER_ID}<br>
-                        <strong>Organizer:</strong> ${data.ORGANIZER}<br>
-                        <strong>Caption:</strong> ${data.CAPTION}<br>
-                        <strong>Target Funding:</strong> $${data.TARGET_FUNDING}<br>
-                        <strong>Current Funding:</strong> $${data.CURRENT_FUNDING}<br>
-                        <strong>City:</strong> ${data.CITY}<br>
-                        <strong>Category:</strong> ${data.CATEGORY}
-                    `;
-                } else {
-                    resultDetailsElement.innerHTML = `
-                        <strong>Category ID:</strong> ${data.CATEGORY_ID}<br>
-                        <strong>Category Name:</strong> ${data.NAME}
-                    `;
-                }
-                messageElement.textContent = ''; // Clear any previous messages
-            } else {
-                const errorData = await response.json();
-                resultDetailsElement.innerHTML = '';
-                messageElement.textContent = errorData.error || 'Error fetching data';
-                messageElement.style.color = 'red';
-            }
-        });
+            const queryString = new URLSearchParams({ organizer, city, category }).toString();
+            fetch(`/search-fundraisers?${queryString}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error("Failed to fetch search results");
+                    }
+                    return response.json();
+                })
+                .then(fundraisers => {
+                    const container = document.getElementById("results-container");
+                    container.innerHTML = ""; // Clear existing content
+
+                    if (fundraisers.length === 0) {
+                        container.innerHTML = "<p style='color: red; font-weight: bold;'>No fundraisers found.</p>";
+                        return;
+                    }
+
+                    fundraisers.forEach(fundraiser => {
+                        const item = document.createElement("div");
+                        item.className = "fundraiser-item";
+                        item.innerHTML = `
+                            <h4>${fundraiser.CAPTION}</h4>
+                            <p>Organized by: ${fundraiser.ORGANIZER}</p>
+                            <p>Target: ${fundraiser.TARGET_FUNDING} AUD</p>
+                            <p>Current: ${fundraiser.CURRENT_FUNDING} AUD</p>
+                            <p>City: ${fundraiser.CITY}</p>
+                            <p>Category: ${fundraiser.CATEGORY}</p>
+                            <a href="fundraiser.html?id=${fundraiser.FUNDRAISER_ID}">View Details</a>
+                        `;
+                        container.appendChild(item);
+                    });
+                })
+                .catch(error => {
+                    console.error("Error searching fundraisers:", error);
+                    const container = document.getElementById("results-container");
+                    container.innerHTML = "<p style='color: red;'>Error searching fundraisers.</p>";
+                });
+        }
+
+        // Function to clear search form
+        function clearSearchForm() {
+            document.getElementById('organizer').value = '';
+            document.getElementById('city').value = '';
+            document.getElementById('category').value = '';
+            document.getElementById('results-container').innerHTML = '';
+        }
     </script>
 </body>
 </html>

@@ -3,64 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Search Fundraiser by ID</title>
+    <title>Fundraiser Details</title>
     <link rel="stylesheet" href="styles.css">
+    <script src="script.js" defer></script>
 </head>
 <body>
-    <nav>
-        <ul>
-            <li><a href="/">Home</a></li>
-            <li><a href="/fundraiser">Search Fundraiser</a></li>
-            <li><a href="/category">Search Category</a></li>
-        </ul>
-    </nav>
-
-    <h1>Search Fundraiser by ID</h1>
-
-    <div class="form-container">
-        <form id="searchFundraiserForm">
-            <label for="fundraiserId">Enter Fundraiser ID:</label>
-            <input type="number" id="fundraiserId" required>
-            <button type="submit">Search</button>
-        </form>
-        <div id="searchMessage" style="margin-top: 10px;"></div>
+    <header>
+        <h1>Fundraiser Details</h1>
+        <nav>
+            <a href="/">Home</a>
+            <a href="/fundraiser">Fundraisers</a>
+        </nav>
+    </header>
+    <div class="container">
+        <div id="fundraiser-details">
+            <img id="fundraiser-image" src="fundraiserpagepic.jpg" alt="Fundraiser Image" />
+            <h3 id="fundraiser-caption">Fundraiser Title</h3>
+            <p id="fundraiser-organizer">Organized by: <span></span></p>
+            <p id="fundraiser-target">Target Funding: <span></span> AUD</p>
+            <p id="fundraiser-current">Current Funding: <span></span> AUD</p>
+            <p id="fundraiser-city">City: <span></span></p>
+            <p id="fundraiser-category">Category: <span></span></p>
+            <p id="fundraiser-description">
+                Join us in our efforts to support the local community during these challenging times. Our fundraiser aims to raise 
+                essential funds to provide resources and assistance to those in need. Your contribution can help us provide 
+                food, shelter, and support to families affected by the recent crisis. 
+                Every dollar counts, and together we can make a significant impact in our community.
+            </p>
+            <button onclick="alert('This feature is under construction')">Donate</button>
+        </div>
     </div>
-
-    <div id="fundraiserResult">
-        <h2>Fundraiser Details</h2>
-        <p id="fundraiserDetails"></p>
-    </div>
-
     <script>
-        // Search fundraiser by ID
-        document.getElementById('searchFundraiserForm').addEventListener('submit', async (event) => {
-            event.preventDefault();
-            const fundraiserId = document.getElementById('fundraiserId').value;
-
-            const response = await fetch(`/fundraiser/${fundraiserId}`);
-            const messageElement = document.getElementById('searchMessage');
-            const fundraiserDetailsElement = document.getElementById('fundraiserDetails');
-
-            if (response.ok) {
-                const fundraiser = await response.json();
-                fundraiserDetailsElement.innerHTML = `
-                    <strong>Fundraiser ID:</strong> ${fundraiser.FUNDRAISER_ID}<br>
-                    <strong>Organizer:</strong> ${fundraiser.ORGANIZER}<br>
-                    <strong>Caption:</strong> ${fundraiser.CAPTION}<br>
-                    <strong>Target Funding:</strong> $${fundraiser.TARGET_FUNDING}<br>
-                    <strong>Current Funding:</strong> $${fundraiser.CURRENT_FUNDING}<br>
-                    <strong>City:</strong> ${fundraiser.CITY}<br>
-                    <strong>Category:</strong> ${fundraiser.CATEGORY}
-                `;
-                messageElement.textContent = ''; // Clear any previous messages
-            } else {
-                const errorData = await response.json();
-                fundraiserDetailsElement.innerHTML = '';
-                messageElement.textContent = errorData.error || 'Error fetching fundraiser';
-                messageElement.style.color = 'red';
-            }
-        });
+        loadFundraiserDetails(); // Call the function to load details on page load
     </script>
-
 </body>
 </html>

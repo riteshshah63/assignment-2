@@ -11,7 +11,7 @@ const app = express();
 const db = mysql.createConnection({
     host: 'localhost',
     user: 'root',
-    password: 'Ritesh@2024',  // Update your password if necessary
+    password: 'Ritesh@2024', // Update your password if necessary
     database: 'Crowdfunding_db' // Ensure this matches your database name
 });
 
@@ -46,7 +46,7 @@ app.get("/category", (req, res) => {
     res.sendFile(path.join(__dirname, "category.html"));
 });
 
-// 1. GET all active fundraisers (for Fundraiser Search Page or other pages that require this data)
+// 1. GET all active fundraisers
 app.get("/fundraisers", (req, res) => {
     const query = `
         SELECT f.FUNDRAISER_ID, f.ORGANIZER, f.CAPTION, f.TARGET_FUNDING, f.CURRENT_FUNDING, f.CITY, c.NAME AS CATEGORY
@@ -64,40 +64,7 @@ app.get("/fundraisers", (req, res) => {
     });
 });
 
-// 2. GET all categories (for Category Search Page)
-app.get("/categories", (req, res) => {
-    const query = "SELECT * FROM CATEGORY";
-    
-    db.query(query, (err, results) => {
-        if (err) {
-            console.error("Error fetching categories: ", err);
-            return res.status(500).json({ error: 'Database query failed' });
-        }
-        res.json(results); // Return categories as JSON
-    });
-});
-
-// 3. GET category details by ID (to fetch details of a specific category)
-app.get("/category/:id", (req, res) => {
-    const categoryId = req.params.id;
-
-    const query = `
-        SELECT * FROM CATEGORY WHERE CATEGORY_ID = ?
-    `;
-    
-    db.query(query, [categoryId], (err, results) => {
-        if (err) {
-            console.error("Error fetching category details: ", err);
-            return res.status(500).json({ error: 'Database query failed' });
-        }
-        if (results.length === 0) {
-            return res.status(404).json({ error: 'Category not found' });
-        }
-        res.json(results[0]); // Return category details
-    });
-});
-
-// 4. GET fundraiser details by ID (to fetch details of a specific fundraiser)
+// 4. GET fundraiser details by ID
 app.get("/fundraiser/:id", (req, res) => {
     const fundraiserId = req.params.id;
 

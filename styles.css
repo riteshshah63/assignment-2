@@ -1,97 +1,107 @@
+/* General styles */
 body {
     font-family: Arial, sans-serif;
-    margin: 20px;
-    padding: 20px;
+    margin: 0;
+    padding: 0;
     background-color: #f4f4f4;
-    font-size: 18px; /* Increased the text size */
+    color: #333;
+}
+
+header {
+    background-color: #007BFF;
+    color: #fff;
+    padding: 10px 20px;
+    text-align: center;
 }
 
 nav {
-    background-color: #333;
-    padding: 10px;
+    margin: 15px 0;
 }
 
-nav ul {
-    list-style: none;
-    padding: 0;
-}
-
-nav ul li {
-    display: inline;
-    margin-right: 20px;
-}
-
-nav ul li a {
-    color: white;
+nav a {
+    margin: 0 15px;
+    color: #fff;
     text-decoration: none;
 }
 
-nav ul li a:hover {
+nav a:hover {
     text-decoration: underline;
 }
 
-h1, h2 {
-    color: #333;
-    font-size: 24px; /* Increased heading size */
+/* Container for content */
+.container {
+    width: 80%;
+    margin: auto;
+    overflow: hidden;
+    padding: 20px;
+    background: #fff;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
-.form-container {
+/* Fundraiser item styles */
+.fundraiser-item {
+    border: 1px solid #ddd;
+    margin: 15px 0;
+    padding: 10px;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+}
+
+.fundraiser-item h4 {
+    margin: 0 0 10px;
+    color: #007BFF;
+}
+
+.fundraiser-item p {
+    margin: 5px 0;
+}
+
+/* Search form styles */
+.search-form {
     margin-bottom: 20px;
-    padding: 10px;
-    background-color: #fff;
-    border: 1px solid #ccc;
-    border-radius: 5px;
 }
 
-#fundraiserResult, #categoryResult, #result {
-    margin-top: 20px;
-    padding: 10px;
-    background-color: #fff;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-}
-
-input[type="number"], input[type="text"], select {
+.search-form input, 
+.search-form select {
     padding: 10px;
     margin: 5px 0;
-    width: 220px;
-    border: 1px solid #ccc;
+    border: 1px solid #ddd;
     border-radius: 4px;
+    width: 100%;
 }
 
+/* Button styles */
 button {
-    padding: 10px 15px;
-    background-color: #5cb85c;
+    background-color: #007BFF;
     color: white;
     border: none;
-    border-radius: 4px;
+    padding: 10px 15px;
     cursor: pointer;
+    border-radius: 4px;
 }
 
 button:hover {
-    background-color: #4cae4c;
+    background-color: #0056b3;
 }
 
-#searchMessage {
+/* Results container */
+#results-container {
+    margin-top: 20px;
+}
+
+.error-message {
     color: red;
-    margin-top: 10px;
+    font-weight: bold;
 }
 
-#result {
-    display: none;
-}
-
-.container {
-    display: flex;
-    flex-direction: column;
-}
-
-.content {
-    text-align: center; /* Centers the content */
-}
-
-.center-image {
-    width: 15%; /* Set image size to 15% of the page width */
-    display: block;
-    margin: 0 auto; /* Centers the image horizontally */
+/* Footer styles */
+footer {
+    text-align: center;
+    padding: 20px;
+    background-color: #007BFF;
+    color: white;
+    position: relative;
+    bottom: 0;
+    width: 100%;
 }
